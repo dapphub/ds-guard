@@ -1,5 +1,5 @@
 /*
-   Copyright 2016 Nexus Development
+   Copyright 2016 Nexus Development, LLC
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,29 +14,31 @@
    limitations under the License.
 */
 
-pragma solidity ^0.4.2;
+pragma solidity ^0.4.4;
 
 import 'dapple/test.sol';
 import 'factory.sol';
 
 contract WhitelistTest is Test {
     WhitelistFactory _factory;
-    Whitelist _w;
+    DSWhitelist _w;
     function setUp() {
         _factory = new WhitelistFactory();
-        _w = _factory.createWhitelist();
+        _w = _factory.createDSWhitelist();
     }
     function testBasics() {
-        _factory.isWhitelist(_w);
+        _factory.isDSWhitelist(_w);
+        assertTrue(_w.isEnabled());
+
+        _w.setEnabled(false);
         assertFalse(_w.isEnabled());
         _w.setEnabled(true);
-/*
         assertTrue(_w.isEnabled());
+        
         _w.setWhitelisted(this, true); 
         assertTrue(_w.isWhitelisted(this));
         assertTrue(_w.canCall(this, 0, 0));
         _w.setEnabled(false);
         assertFalse(_w.isWhitelisted(this));
-*/
     }
 }

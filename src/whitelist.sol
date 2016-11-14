@@ -18,13 +18,17 @@ pragma solidity ^0.4.2;
 
 import 'ds-auth/auth.sol';
 
-contract Whitelist is DSAuthority
-                    , DSAuthorized
+// Implements `canCall` so it can be used directly as `auth` authority
+contract DSWhitelist is DSAuthority
+                      , DSAuthorized
 {
     bool _enabled; // global disable
     mapping(address=>bool) _whitelist;
-    // Implements `canCall` so it can be used directly as `auth` authority
 
+
+    function DSWhitelist() {
+        setEnabled(true);
+    }
     function isEnabled()
         constant
         returns (bool)

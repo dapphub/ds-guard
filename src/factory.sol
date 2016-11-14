@@ -22,14 +22,14 @@ import 'whitelist.sol';
 
 contract WhitelistFactory {
     mapping(address=>bool) is_whitelist;
-    function createWhitelist() returns (Whitelist) {
-        var whitelist = new Whitelist();
+    function createDSWhitelist() returns (DSWhitelist) {
+        var whitelist = new DSWhitelist();
         is_whitelist[address(whitelist)] = true;
         whitelist.setOwner(msg.sender);
         return whitelist;
     }
     // Not to be confused with `isWhitelisted` on instances
-    function isWhitelist(address code)
+    function isDSWhitelist(address code)
         constant
         returns (bool)
     {

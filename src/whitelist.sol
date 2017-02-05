@@ -1,5 +1,5 @@
 /*
-   Copyright 2016 Nexus Development
+   Copyright 2016-2017 Nexus Development
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,48 +14,57 @@
    limitations under the License.
 */
 
-pragma solidity ^0.4.2;
+pragma solidity ^0.4.9;
 
 import 'ds-auth/auth.sol';
 
-// Implements `canCall` so it can be used directly as `auth` authority
 contract DSWhitelist is DSAuthority
-                      , DSAuthorized
+                      , DSAuth
 {
-    bool _enabled; // global disable
-    mapping(address=>bool) _whitelist;
+    mapping(address=>bool)                  _isRoot; // Can call any entrypoint
+    mapping(address=>bool)                  _isPublicCode; // Public addrs
+    mapping(address=>
+            mapping(bytes4=>bool))          _isPublicCapability; // Public addr+sig
+    mapping(address=>
+            mapping(address=>
+                    mapping(bytes4=>bool))) _canCall; // fine-grained control
 
-
-    function DSWhitelist() {
-        setEnabled(true);
-    }
-    function isEnabled()
-        constant
-        returns (bool)
+    function canCall( address caller
+                    , address code
+                    , bytes4 sig )
+             constant
+             returns (bool)
     {
-        return _enabled;
-    }
-    function isWhitelisted(address who)
-        constant
-        returns (bool)
-    {
-        return isEnabled() && _whitelist[who];
-    }
-    function canCall(address caller, address code, bytes4 sig)
-        constant
-        returns (bool)
-    {
-        return isWhitelisted(caller);
+        return _isRoot[caller]
+            || _isPublicCode[code]
+            || _isPublicCapability[code][sig]
+            || _canCall[caller_address][code_address][sig];
     }
 
-    function setWhitelisted(address who, bool what)
+    function setIsRoot( address caller, bool what )
         auth
     {
-        _whitelist[who] = what;
+        _isRoot[caller] = what;
     }
-    function setEnabled(bool what)
+    
+    function setIsPublicCode( address code, bool what )
         auth
     {
-        _enabled = what;
+        _isPublicCode[code] = what;
+    }
+
+    function setIsPublicCapability( address code, bytes4 sig, bool what )
+        auth
+    {
+        _isPublicCapability[code][sig] = what;
+    }
+
+    function setCanCall( address caller_address
+                       , address code_address
+                       , bytes4  sig
+                       , bool    can )
+        auth
+    {
+        _canCall[caller_address][code_address][sig] = can;
     }
 }

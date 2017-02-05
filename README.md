@@ -1,6 +1,9 @@
 `ds-whitelist`
 ===
 
-This is an `address=>bool` registry. It is also a `DSAuthority` (has `canCall`) which only cares about the caller.
+`DSWhitelist` is a type of `DSAuthority`. Its `canCall` function is:
 
-It also has a global enable/disable ("emergency freeze") feature, which the BasicAuthority lacks.
+    return _isRoot[caller]
+        || _isPublicCode[code]
+        || _isPublicCapability[code][sig]
+        || _canCall[caller_address][code_address][sig];

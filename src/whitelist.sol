@@ -38,7 +38,7 @@ contract DSWhitelist is DSAuthority
         return _isRoot[caller]
             || _isPublicCode[code]
             || _isPublicCapability[code][sig]
-            || _canCall[caller_address][code_address][sig];
+            || _canCall[caller][code][sig];
     }
 
     function setIsRoot( address caller, bool what )

@@ -18,8 +18,8 @@ pragma solidity ^0.4.8;
 
 import 'ds-auth/auth.sol';
 
-contract DSWhitelist is DSAuthority
-                      , DSAuth
+contract DSWhitelist is DSAuth
+                      , DSAuthority
 {
     mapping(address=>bool)                  _isRoot; // Can call any entrypoint
     mapping(address=>bool)                  _isPublicCode; // Public addrs

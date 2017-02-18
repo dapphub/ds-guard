@@ -67,4 +67,8 @@ contract DSWhitelist is DSAuth
     {
         _canCall[caller_address][code_address][sig] = can;
     }
+
+    function release(DSIAuth what) auth {
+        what.setAuthority(msg.sender);
+    }
 }

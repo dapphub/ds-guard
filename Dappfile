@@ -1,6 +1,6 @@
-name:      ds-whitelist
-version:   0
-layout:
-  build_dir:            build
-  packages_directory:   lib
-  sol_sources:          src
+name            ds-guard
+description
+version         0.0.1
+
+author          dbrock
+license         Apache-2.0

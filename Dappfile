@@ -1,6 +1,7 @@
 name            ds-guard
-description
-version         0.0.1
+description     A whitelist-based implementation of DSAuthority
+version         K50
 
-author          dbrock
+author          Nikolai Mushegian <nikolai@dapphub.com>
+author          Daniel Brockman <daniel@dapphub.com>
 license         Apache-2.0

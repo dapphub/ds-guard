@@ -1,0 +1,6 @@
+DSGuard is a type of DSAuthority. Its canCall function is:
+
+    return _isRoot[sender]
+        || _isPublicCode[callee]
+        || _isPublicCapability[callee][sig]
+        || _canCall[sender][callee][sig];

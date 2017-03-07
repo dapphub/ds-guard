@@ -1,6 +1,7 @@
-name:      ds-whitelist
-version:   0
-layout:
-  build_dir:            build
-  packages_directory:   lib
-  sol_sources:          src
+name            ds-guard
+description     A whitelist-based implementation of DSAuthority
+version         K50
+
+author          Nikolai Mushegian <nikolai@dapphub.com>
+author          Daniel Brockman <daniel@dapphub.com>
+license         Apache-2.0

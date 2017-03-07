@@ -14,20 +14,19 @@
    limitations under the License.
 */
 
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.8;
 
-import 'dapple/test.sol';
-import 'factory.sol';
+import "ds-test/test.sol";
 
-contract WhitelistTest is Test {
-    WhitelistFactory _factory;
-    DSWhitelist _w;
+contract GuardTest is DSTest {
+    GuardFactory _factory;
+    DSGuard _w;
     function setUp() {
-        _factory = new WhitelistFactory();
-        _w = _factory.createDSWhitelist();
+        _factory = new GuardFactory();
+        _w = _factory.createDSGuard();
     }
     function testBasics() {
-        _factory.isDSWhitelist(_w);
+        _factory.isDSGuard(_w);
         assertTrue(_w.isEnabled());
 
         _w.setEnabled(false);
@@ -35,10 +34,10 @@ contract WhitelistTest is Test {
         _w.setEnabled(true);
         assertTrue(_w.isEnabled());
         
-        _w.setWhitelisted(this, true); 
-        assertTrue(_w.isWhitelisted(this));
+        _w.setGuarded(this, true); 
+        assertTrue(_w.isGuarded(this));
         assertTrue(_w.canCall(this, 0, 0));
         _w.setEnabled(false);
-        assertFalse(_w.isWhitelisted(this));
+        assertFalse(_w.isGuarded(this));
     }
 }

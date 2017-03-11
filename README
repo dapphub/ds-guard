@@ -1,4 +1,4 @@
-DSGuard is a type of DSAuthority. Its canCall function is:
+A DSAuthority whose `canCall()' function looks as follows:
 
     return acl[src][dst][sig]
         || acl[src][dst][ANY]

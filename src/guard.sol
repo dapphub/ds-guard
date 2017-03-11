@@ -13,7 +13,12 @@ pragma solidity ^0.4.8;
 
 import "ds-auth/auth.sol";
 
-contract DSGuard is DSAuth, DSAuthority {
+contract DSGuardEvents {
+    event LogAllow(bytes32 src, bytes32 dst, bytes32 sig, bool yes);
+    event LogSig(string signature, bytes4 sig);
+}
+
+contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
     bytes32 constant public ANY = bytes32(uint(-1));
 
     mapping (bytes32 => mapping (bytes32 => mapping (bytes32 => bool))) acl;
@@ -31,7 +36,7 @@ contract DSGuard is DSAuth, DSAuthority {
             || acl[ANY][dst][sig]
             || acl[ANY][dst][ANY]
             || acl[ANY][ANY][sig]
-            || acl[ANY][ANY][ANY]
+            || acl[ANY][ANY][ANY];
     }
 
     function allow(address src, address dst, string sig) {
@@ -43,8 +48,8 @@ contract DSGuard is DSAuth, DSAuthority {
     }
 
     function allow(bytes32 src, bytes32 dst, string sig, bool yes) {
-        LogSig(sig);
-        allow(src, dst, bytes4(sha3(sig)));
+        LogSig(sig, bytes4(sha3(sig)));
+        allow(src, dst, bytes4(sha3(sig)), yes);
     }
 
     function allow(bytes32 src, bytes32 dst, bytes32 sig, bool yes)

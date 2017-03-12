@@ -26,7 +26,7 @@ contract DSGuardTest is DSTest {
     
     function testBasics() {
         factory.created(guard);
-        guard.allow(bytes32(address(this)), guard.ANY(), guard.ANY(), true);
+        guard.okay(address(this), guard.ANY(), guard.ANY());
         assert(guard.canCall(this, address(0x1234), 0x12345678));
     }
 }

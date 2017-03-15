@@ -15,7 +15,6 @@ import "ds-auth/auth.sol";
 
 contract DSGuardEvents {
     event LogOkay(bytes32 src, bytes32 dst, bytes32 sig, bool yes);
-    event LogSignature(string signature, bytes4 sig);
 }
 
 contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
@@ -39,32 +38,14 @@ contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
             || acl[ANY][ANY][ANY];
     }
 
-    // For use with explicit `src', `dst' and `sig':
-    function okay(address src, address dst, string sig) {
-        okay(src, dst, sig, true);
-    }
-    function okay(address src, address dst, string sig, bool yes) {
-        okay(bytes32(src), bytes32(dst), sig, yes);
+    function okay(address src, address dst) {
+        okay(src, dst, ANY);
     }
 
-    // Convenience overloads for use with `ANY':
-    function okay(address src, bytes32 dst, bytes32 sig) {
-        okay(bytes32(src), bytes32(dst), sig, true);
-    }
     function okay(address src, address dst, bytes32 sig) {
         okay(bytes32(src), bytes32(dst), sig, true);
     }
-    function okay(address src, bytes32 dst, string sig) {
-        okay(bytes32(src), bytes32(dst), sig, true);
-    }
 
-    // Called by every `okay' variant that takes a full signature:
-    function okay(bytes32 src, bytes32 dst, string sig, bool yes) {
-        LogSignature(sig, bytes4(sha3(sig)));
-        okay(src, dst, bytes4(sha3(sig)), yes);
-    }
-
-    // Actual implementation called by all the rest:
     function okay(bytes32 src, bytes32 dst, bytes32 sig, bool yes)
         authorized("okay")
     {

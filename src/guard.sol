@@ -1,6 +1,6 @@
 /// guard.sol -- whitelist-based implementation of DSAuthority
 
-// Copyright (C) 2015, 2016, 2017  Nexus Development, LLC
+// Copyright (C) 2015, 2016, 2017  DappHub, LLC
 
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.

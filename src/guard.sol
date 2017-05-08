@@ -22,7 +22,7 @@ contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
 
     mapping (bytes32 => mapping (bytes32 => mapping (bytes32 => bool))) acl;
 
-    function permitted(
+    function allowed(
         address src_, address dst_, bytes32 sig
     ) constant returns (bool) {
         var src = bytes32(src_);

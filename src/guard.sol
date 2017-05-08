@@ -22,8 +22,8 @@ contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
 
     mapping (bytes32 => mapping (bytes32 => mapping (bytes32 => bool))) acl;
 
-    function canCall(
-        address src_, address dst_, bytes4 sig
+    function allowed(
+        address src_, address dst_, bytes32 sig
     ) constant returns (bool) {
         var src = bytes32(src_);
         var dst = bytes32(dst_);
@@ -47,7 +47,7 @@ contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
     }
 
     function okay(bytes32 src, bytes32 dst, bytes32 sig, bool yes)
-        authorized("okay")
+        auth_as("okay")
     {
         acl[src][dst][sig] = yes;
         LogOkay(src, dst, sig, yes);

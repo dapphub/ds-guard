@@ -20,6 +20,6 @@ contract DSGuardFactory {
     
     function newGuard() returns (DSGuard guard) {
         created[guard = new DSGuard()] = true;
-        guard.setAuthority(DSIAuthority(msg.sender));
+        guard.setOwner(msg.sender);
     }
 }

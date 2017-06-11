@@ -1,6 +1,7 @@
-/// guard.sol -- whitelist-based implementation of DSAuthority
+/// guard.sol -- simple whitelist implementation of DSAuthority
 
-// Copyright (C) 2015, 2016, 2017  DappHub, LLC
+// Copyright (C) 2015, 2016  Nikolai Mushegian <nikolai@dapphub.com>
+// Copyright (C) 2016, 2017  Daniel Brockman <daniel@brockman.se>
 
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -9,12 +10,22 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND (express or implied).
 
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 import "ds-auth/auth.sol";
 
 contract DSGuardEvents {
-    event LogOkay(bytes32 src, bytes32 dst, bytes32 sig, bool yes);
+    event LogPermit(
+        bytes32 indexed src,
+        bytes32 indexed dst,
+        bytes32 indexed sig
+    );
+    
+    event LogForbid(
+        bytes32 indexed src,
+        bytes32 indexed dst,
+        bytes32 indexed sig
+    );
 }
 
 contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
@@ -38,18 +49,23 @@ contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
             || acl[ANY][ANY][ANY];
     }
 
-    function okay(address src, address dst) {
-        okay(src, dst, ANY);
+    function permit(bytes32 src, bytes32 dst, bytes32 sig) auth {
+        acl[src][dst][sig] = true;
+        LogPermit(src, dst, sig);
     }
 
-    function okay(address src, address dst, bytes32 sig) {
-        okay(bytes32(src), bytes32(dst), sig, true);
+    function forbid(bytes32 src, bytes32 dst, bytes32 sig) auth {
+        acl[src][dst][sig] = false;
+        LogForbid(src, dst, sig);
     }
+}
 
-    function okay(bytes32 src, bytes32 dst, bytes32 sig, bool yes)
-        authorized("okay")
-    {
-        acl[src][dst][sig] = yes;
-        LogOkay(src, dst, sig, yes);
+contract DSGuardFactory {
+    mapping (address => bool)  public  isGuard;
+    
+    function newGuard() returns (DSGuard guard) {
+        guard = new DSGuard();
+        guard.setOwner(msg.sender);
+        isGuard[guard] = true;
     }
 }

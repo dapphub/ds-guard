@@ -58,6 +58,14 @@ contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
         acl[src][dst][sig] = false;
         LogForbid(src, dst, sig);
     }
+
+    function permit(address src, address dst, bytes32 sig) {
+        permit(bytes32(src), bytes32(dst), sig);
+    }
+    function forbid(address src, address dst, bytes32 sig) {
+        forbid(bytes32(src), bytes32(dst), sig);
+    }
+
 }
 
 contract DSGuardFactory {

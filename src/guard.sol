@@ -20,7 +20,7 @@ contract DSGuardEvents {
         bytes32 indexed dst,
         bytes32 indexed sig
     );
-    
+
     event LogForbid(
         bytes32 indexed src,
         bytes32 indexed dst,
@@ -70,7 +70,7 @@ contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
 
 contract DSGuardFactory {
     mapping (address => bool)  public  isGuard;
-    
+
     function newGuard() returns (DSGuard guard) {
         guard = new DSGuard();
         guard.setOwner(msg.sender);

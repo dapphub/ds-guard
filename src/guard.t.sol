@@ -18,13 +18,13 @@ import "./guard.sol";
 contract DSGuardTest is DSTest {
     DSGuardFactory  factory;
     DSGuard         guard;
-    
-    function setUp() {
+
+    function setUp() public {
         factory = new DSGuardFactory();
         guard = factory.newGuard();
     }
-    
-    function testBasics() {
+
+    function testBasics() public {
         assertTrue(factory.isGuard(guard));
         guard.permit(bytes32(address(this)), guard.ANY(), guard.ANY());
         assertTrue(guard.canCall(this, address(0x1234), 0x12345678));

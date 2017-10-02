@@ -35,7 +35,7 @@ contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
 
     function canCall(
         address src_, address dst_, bytes4 sig
-    ) constant returns (bool) {
+    ) public view returns (bool) {
         var src = bytes32(src_);
         var dst = bytes32(dst_);
 
@@ -49,20 +49,20 @@ contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
             || acl[ANY][ANY][ANY];
     }
 
-    function permit(bytes32 src, bytes32 dst, bytes32 sig) auth {
+    function permit(bytes32 src, bytes32 dst, bytes32 sig) public auth {
         acl[src][dst][sig] = true;
         LogPermit(src, dst, sig);
     }
 
-    function forbid(bytes32 src, bytes32 dst, bytes32 sig) auth {
+    function forbid(bytes32 src, bytes32 dst, bytes32 sig) public auth {
         acl[src][dst][sig] = false;
         LogForbid(src, dst, sig);
     }
 
-    function permit(address src, address dst, bytes32 sig) {
+    function permit(address src, address dst, bytes32 sig) public {
         permit(bytes32(src), bytes32(dst), sig);
     }
-    function forbid(address src, address dst, bytes32 sig) {
+    function forbid(address src, address dst, bytes32 sig) public {
         forbid(bytes32(src), bytes32(dst), sig);
     }
 
@@ -71,7 +71,7 @@ contract DSGuard is DSAuth, DSAuthority, DSGuardEvents {
 contract DSGuardFactory {
     mapping (address => bool)  public  isGuard;
 
-    function newGuard() returns (DSGuard guard) {
+    function newGuard() public returns (DSGuard guard) {
         guard = new DSGuard();
         guard.setOwner(msg.sender);
         isGuard[guard] = true;

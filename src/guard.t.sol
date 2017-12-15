@@ -30,9 +30,16 @@ contract DSGuardTest is DSTest {
         guard = factory.newGuard();
     }
 
-    function testBasics() public {
+    function testFactorySetup() public {
         assertTrue(factory.isGuard(guard));
+    }
+    function testPermitAny() public {
         guard.permit(bytes32(address(this)), guard.ANY(), guard.ANY());
         assertTrue(guard.canCall(this, address(0x1234), 0x12345678));
+    }
+    function testForbidAny() public {
+        testPermit();
+        guard.forbid(bytes32(address(this)), guard.ANY(), guard.ANY());
+        assertTrue(!guard.canCall(this, address(0x1234), 0x12345678));
     }
 }

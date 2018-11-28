@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pragma solidity ^0.4.13;
+pragma solidity >0.4.23;
 
 import "ds-test/test.sol";
 
@@ -31,26 +31,26 @@ contract DSGuardTest is DSTest {
     }
 
     function testFactorySetup() public {
-        assertTrue(factory.isGuard(guard));
+        assertTrue(factory.isGuard(address(guard)));
     }
     function testPermitAny() public {
-        guard.permit(bytes32(address(this)), guard.ANY(), guard.ANY());
-        assertTrue(guard.canCall(this, address(0x1234), 0x12345678));
+        guard.permit(bytes32(bytes20(address(this))), guard.ANY(), guard.ANY());
+        assertTrue(guard.canCall(address(this), address(0x1234), 0x12345678));
     }
     function testForbidAny() public {
-        guard.permit(bytes32(address(this)), guard.ANY(), guard.ANY());
-        guard.forbid(bytes32(address(this)), guard.ANY(), guard.ANY());
-        assertTrue(!guard.canCall(this, address(0x1234), 0x12345678));
+        guard.permit(bytes32(bytes20(address(this))), guard.ANY(), guard.ANY());
+        guard.forbid(bytes32(bytes20(address(this))), guard.ANY(), guard.ANY());
+        assertTrue(!guard.canCall(address(this), address(0x1234), 0x12345678));
     }
     function testPermitAddress() public {
-        guard.permit(this, 0x1234, guard.ANY());
+        guard.permit(address(this), address(0x1234), guard.ANY());
         assertTrue(guard.canCall(address(this), address(0x1234), 0x12345678));
         assertTrue(!guard.canCall(address(this), address(0x5678), 0x12345678));
     }
     function testForbidAddress() public {
-        guard.permit(this, 0x1234, guard.ANY());
+        guard.permit(address(this), address(0x1234), guard.ANY());
         assertTrue(guard.canCall(address(this), address(0x1234), 0x12345678));
-        guard.forbid(this, 0x1234, guard.ANY());
-        assertTrue(!guard.canCall(this, address(0x1234), 0x12345678));
+        guard.forbid(address(this), address(0x1234), guard.ANY());
+        assertTrue(!guard.canCall(address(this), address(0x1234), 0x12345678));
     }
 }
